@@ -21,9 +21,11 @@ table_create_events = """
 # Payload
 table_create_payloads = """
     CREATE TABLE IF NOT EXISTS Payload (
+        eventId TEXT NOT NULL,
         action VARCHAR(255),
         userId VARCHAR(255),
-        userLogin VARCHAR(255)
+        userLogin VARCHAR(255),
+        PRIMARY KEY (eventId)
     )
 """
 
@@ -56,6 +58,25 @@ def create_tables(session):
             print(e)
 
 
+
+def get_files(filepath: str) -> List[str]:
+    """
+    Description: This function is responsible for listing the files in a directory
+    """
+
+    all_files = []
+    for root, dirs, files in os.walk(filepath):
+        files = glob.glob(os.path.join(root, "*.json"))
+        for f in files:
+            all_files.append(os.path.abspath(f))
+
+    num_files = len(all_files)
+    print(f"{num_files} files found in {filepath}")
+
+    return all_files
+
+
+
 def process(session, filepath):
     # Get list of files from filepath
     all_files = get_files(filepath)
@@ -69,12 +90,6 @@ def process(session, filepath):
 
                 # Insert data into tables here
 
-
-def insert_sample_data(session):
-    query = f"""
-    INSERT INTO events (id, type, public) VALUES ('23487929637', 'IssueCommentEvent', true)
-    """
-    session.execute(query)
 
 
 def main():
@@ -101,9 +116,8 @@ def main():
     drop_tables(session)
     create_tables(session)
 
-    # process(session, filepath="../data")
-    insert_sample_data(session)
-
+    process(session, filepath="../data")
+   
     # Select data in Cassandra and print them to stdout
     query = """
     SELECT * from events WHERE id = '23487929637' AND type = 'IssueCommentEvent'
