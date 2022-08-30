@@ -116,11 +116,11 @@ def process(session, filepath):
                     pass
 
 
-                try:
-                    session.commit()
-                    i = i+1
+                # try:
+                session.commit()
+                i = i+1
 
-                except:
+                # except:
                     # Rolling back in case of error
                     # session.rollback()
     
