@@ -122,7 +122,7 @@ def process(session, filepath):
 
                 except:
                     # Rolling back in case of error
-                    session.rollback()
+                    # session.rollback()
     
     print("Data inserted total " + str(i) + " records")
 
