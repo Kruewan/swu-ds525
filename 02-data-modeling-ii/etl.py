@@ -74,6 +74,7 @@ def process(session, filepath):
     # Get list of files from filepath
     all_files = get_files(filepath)
 
+    i = 0
     for datafile in all_files:
         with open(datafile, "r") as f:
             data = json.loads(f.read())
@@ -117,7 +118,7 @@ def process(session, filepath):
 
 
                 # try:
-                session.commit()
+                # session.commit()
                 i = i+1
 
                 # except:
