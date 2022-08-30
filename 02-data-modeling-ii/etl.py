@@ -1,4 +1,5 @@
 from cassandra.cluster import Cluster
+from typing import List
 
 
 table_drop_events = "DROP TABLE IF EXISTS Event"
