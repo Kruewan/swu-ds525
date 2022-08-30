@@ -1,4 +1,7 @@
 from cassandra.cluster import Cluster
+import glob
+import json
+import os
 from typing import List
 
 table_drop_events = "DROP TABLE IF EXISTS Event"
@@ -12,7 +15,6 @@ table_create_events = """
         action VARCHAR(255),
         public BOOLEAN,
         created_at TIMESTAMP,
-        orgId INT,
         PRIMARY KEY (eventId)
     )
 """
@@ -80,6 +82,49 @@ def process(session, filepath):
                 print(each["id"], each["type"], each["actor"]["login"])
 
                 # Insert data into tables here
+                
+                # Insert table event
+                try:
+                    insert_statement_event = f"""
+                        INSERT INTO Event (eventId,type,action,public,created_at) 
+                        VALUES ('{each["id"]}'
+                                , '{each["type"]}'
+                                , '{each["payload"]["action"]}'
+                                , '{each["public"]}'
+                                , '{each["created_at"]}'
+                                )
+                        ON CONFLICT (eventId) DO NOTHING
+                    """
+                    session.execute(insert_statement_event)
+                except:
+                    pass
+
+                # Insert table Payload
+                try:
+                    insert_statement_payload = f"""
+                        INSERT INTO Payload (eventId,action,userId,userLogin) 
+                        VALUES ('{each["id"]}'
+                                , '{each["type"]}'
+                                , '{each["payload"]["action"]}'
+                                , '{each["public"]}'
+                                , '{each["created_at"]}'
+                                )
+                        ON CONFLICT (eventId) DO NOTHING
+                    """
+                    session.execute(insert_statement_payload)
+                except:
+                    pass
+
+
+                try:
+                    session.commit()
+                    i = i+1
+
+                except:
+                    # Rolling back in case of error
+                    session.rollback()
+    
+    print("Data inserted total " + str(i) + " records")
 
 
 
