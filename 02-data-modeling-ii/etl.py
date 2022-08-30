@@ -1,27 +1,44 @@
 from cassandra.cluster import Cluster
 
 
-table_drop = "DROP TABLE events"
+table_drop_events = "DROP TABLE IF EXISTS Event"
+table_drop_payloads = "DROP TABLE IF EXISTS Payload"
 
-table_create = """
-    CREATE TABLE IF NOT EXISTS events
-    (
-        id text,
-        type text,
-        public boolean,
-        PRIMARY KEY (
-            id,
-            type
-        )
+
+# Event
+table_create_events = """
+    CREATE TABLE IF NOT EXISTS Event (
+        eventId TEXT NOT NULL,
+        type VARCHAR(255),
+        action VARCHAR(255),
+        public BOOLEAN,
+        created_at TIMESTAMP,
+        orgId INT,
+        PRIMARY KEY (eventId)
     )
 """
 
+# Payload
+table_create_payloads = """
+    CREATE TABLE IF NOT EXISTS Payload (
+        action VARCHAR(255),
+        userId VARCHAR(255),
+        userLogin VARCHAR(255)
+    )
+"""
+
+
+
 create_table_queries = [
-    table_create,
+    table_create_payloads,
+    table_create_events,
 ]
 drop_table_queries = [
-    table_drop,
+    table_drop_events,
+    table_drop_payloads,
 ]
+
+
 
 def drop_tables(session):
     for query in drop_table_queries:
