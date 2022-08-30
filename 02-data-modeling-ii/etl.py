@@ -11,11 +11,11 @@ table_drop_payloads = "DROP TABLE IF EXISTS Payload"
 table_create_events = """
     CREATE TABLE IF NOT EXISTS Event (
         eventId TEXT NOT NULL,
-        type VARCHAR(255),
-        action VARCHAR(255),
+        type TEXT,
+        action TEXT,
         public BOOLEAN,
         created_at TIMESTAMP,
-        PRIMARY KEY (eventId)
+        PRIMARY KEY (eventId , type)
     )
 """
 
@@ -23,9 +23,9 @@ table_create_events = """
 table_create_payloads = """
     CREATE TABLE IF NOT EXISTS Payload (
         eventId TEXT NOT NULL,
-        action VARCHAR(255),
-        userId VARCHAR(255),
-        userLogin VARCHAR(255),
+        action TEXT,
+        userId TEXT,
+        userLogin TEXT,
         PRIMARY KEY (eventId)
     )
 """
