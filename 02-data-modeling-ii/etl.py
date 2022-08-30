@@ -107,8 +107,8 @@ def process(session, filepath):
                         VALUES ('{each["id"]}'
                                 , '{each["type"]}'
                                 , '{each["payload"]["action"]}'
-                                , '{each["public"]}'
-                                , '{each["created_at"]}'
+                                , '{each["payload"]["user"]["id"]}'
+                                , '{each["payload"]["user"]["login"]}'
                                 )
                         ON CONFLICT (eventId) DO NOTHING
                     """
