@@ -1,10 +1,8 @@
 from cassandra.cluster import Cluster
 from typing import List
 
-
 table_drop_events = "DROP TABLE IF EXISTS Event"
 table_drop_payloads = "DROP TABLE IF EXISTS Payload"
-
 
 # Event
 table_create_events = """
@@ -30,8 +28,6 @@ table_create_payloads = """
     )
 """
 
-
-
 create_table_queries = [
     table_create_payloads,
     table_create_events,
@@ -40,8 +36,6 @@ drop_table_queries = [
     table_drop_events,
     table_drop_payloads,
 ]
-
-
 
 def drop_tables(session):
     for query in drop_table_queries:
@@ -58,8 +52,6 @@ def create_tables(session):
         except Exception as e:
             print(e)
 
-
-
 def get_files(filepath: str) -> List[str]:
     """
     Description: This function is responsible for listing the files in a directory
@@ -75,8 +67,6 @@ def get_files(filepath: str) -> List[str]:
     print(f"{num_files} files found in {filepath}")
 
     return all_files
-
-
 
 def process(session, filepath):
     # Get list of files from filepath
