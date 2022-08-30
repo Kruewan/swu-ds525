@@ -7,6 +7,19 @@ from typing import List
 table_drop_events = "DROP TABLE IF EXISTS Event"
 table_drop_payloads = "DROP TABLE IF EXISTS Payload"
 
+table_create = """
+    CREATE TABLE IF NOT EXISTS events
+    (
+        id text,
+        type text,
+        public boolean,
+        PRIMARY KEY (
+            id,
+            type
+        )
+    )
+"""
+
 # Event
 table_create_events = """
     CREATE TABLE IF NOT EXISTS Event (
@@ -31,8 +44,9 @@ table_create_payloads = """
 """
 
 create_table_queries = [
-    table_create_payloads,
-    table_create_events,
+    #table_create_payloads,
+    #table_create_events,
+    table_create,
 ]
 drop_table_queries = [
     table_drop_events,
@@ -80,9 +94,11 @@ def process(session, filepath):
             data = json.loads(f.read())
             for each in data:
                 # Print some sample data
-                print(each["id"], each["type"], each["actor"]["login"])
+                # print(each["id"], each["type"], each["actor"]["login"])
 
                 # Insert data into tables here
+                query = f"""INSERT INTO events (id, type, public) VALUES ('23487929637', 'IssueCommentEvent', true)"""
+                session.execute(query)
                 
                 # Insert table event
                 try:
