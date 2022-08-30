@@ -4,31 +4,23 @@ import json
 import os
 from typing import List
 
-table_drop_events = "DROP TABLE IF EXISTS Event"
+table_drop_events = "DROP TABLE IF EXISTS events"
 table_drop_payloads = "DROP TABLE IF EXISTS Payload"
+
+
 
 table_create = """
     CREATE TABLE IF NOT EXISTS events
     (
         id text,
         type text,
-        public boolean,
+        action text,
+        public text,
+        created_at TIMESTAMP,
         PRIMARY KEY (
             id,
             type
         )
-    )
-"""
-
-# Event
-table_create_events = """
-    CREATE TABLE IF NOT EXISTS Event (
-        eventId TEXT NOT NULL,
-        type TEXT,
-        action TEXT,
-        public BOOLEAN,
-        created_at TIMESTAMP,
-        PRIMARY KEY (eventId , type)
     )
 """
 
@@ -50,7 +42,7 @@ create_table_queries = [
 ]
 drop_table_queries = [
     table_drop_events,
-    table_drop_payloads,
+    #table_drop_payloads,
 ]
 
 def drop_tables(session):
@@ -93,14 +85,12 @@ def process(session, filepath):
         with open(datafile, "r") as f:
             data = json.loads(f.read())
             for each in data:
-                # Print some sample data
-                # print(each["id"], each["type"], each["actor"]["login"])
-
-                # Insert data into tables here
-                query = f"""INSERT INTO events (id, type, public) VALUES ('23487929637', 'IssueCommentEvent', true)"""
+             
+                # Insert data into tables event
+                query = f"""INSERT INTO events (id, type, public) VALUES ('{each["id"]}', '{each["type"]}', '{each["public"]}')"""
                 session.execute(query)
                 
-                # Insert table event
+                # Insert table 
                 try:
                     insert_statement_event = f"""
                         INSERT INTO Event (eventId,type,action,public,created_at) 
@@ -173,7 +163,7 @@ def main():
    
     # Select data in Cassandra and print them to stdout
     query = """
-    SELECT * from events WHERE id = '23487929637' AND type = 'IssueCommentEvent'
+    SELECT * from events -- WHERE id = '23487929637' AND type = 'IssueCommentEvent'
     """
     try:
         rows = session.execute(query)
