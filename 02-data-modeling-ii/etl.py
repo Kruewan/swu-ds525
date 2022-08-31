@@ -6,17 +6,30 @@ from typing import List
 
 table_drop_events = "DROP TABLE IF EXISTS events"
 table_drop_payloads = "DROP TABLE IF EXISTS payloads"
+table_drop_actors = "DROP TABLE IF EXISTS actors"
 
 table_create_events = """
     CREATE TABLE IF NOT EXISTS events
     (
         id text,
         type text,
-        action text,
         public text,
         PRIMARY KEY (
             id,
             type
+        )
+    )
+"""
+
+table_create_actors = """
+    CREATE TABLE IF NOT EXISTS actors
+    (
+        actor_id text,
+        actor_login text,
+        actor_display_login text,
+        PRIMARY KEY (
+            actor_id,
+            actor_display_login
         )
     )
 """
@@ -26,22 +39,21 @@ table_create_payloads = """
     (
         id text,
         action text,
-        userId TEXT,
-        userLogin TEXT,
         PRIMARY KEY (
-            id,
-            userId
+            id
         )
     )
 """
 
 create_table_queries = [
     table_create_events,
-    table_create_payloads
+    table_create_payloads,
+    table_create_actors,
 ]
 drop_table_queries = [
     table_drop_events,
     table_drop_payloads,
+    table_drop_actors,
 ]
 
 def drop_tables(session):
@@ -94,8 +106,15 @@ def process(session, filepath):
                     pass
 
                 try:
+                    # Insert data into tables actors
+                    query = f"""INSERT INTO actors (actor_id,actor_login,actor_display_login) VALUES ('{each["actor"]["id"]}', '{each["actor"]["login"]}', '{each["actor"]["display_login"]}')"""
+                    session.execute(query)
+                except:
+                    pass
+
+                try:
                     # Insert data into tables payloads
-                    query = f"""INSERT INTO payloads (id, action, userId, userLogin) VALUES ('{each["id"]}', '{each["payload"]["action"]}', '{each["payload"]["issue"]["user"]["id"]}', '{each["payload"]["issue"]["user"]["login"]}')"""
+                    query = f"""INSERT INTO payloads (id, action) VALUES ('{each["id"]}', '{each["payload"]["action"]}')"""
                     session.execute(query)
                 except:
                     pass
@@ -133,8 +152,7 @@ def main():
    
     # Select data in Cassandra and print them to stdout
     query = """
-    -- SELECT * from events  -- WHERE id = '23487929637' AND type = 'IssueCommentEvent'
-    SELECT id, userId, COUNT (*) AS user_count  FROM payloads GROUP BY id, userId
+    SELECT actor_id, actor_display_login, COUNT (*)  AS user_count  FROM actors  GROUP BY actor_id, actor_display_login
     """
     try:
         rows = session.execute(query)
