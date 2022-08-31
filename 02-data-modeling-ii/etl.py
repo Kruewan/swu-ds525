@@ -29,7 +29,8 @@ table_create_payloads = """
         userId TEXT,
         userLogin TEXT,
         PRIMARY KEY (
-            id
+            id,
+            userId
         )
     )
 """
@@ -132,8 +133,8 @@ def main():
    
     # Select data in Cassandra and print them to stdout
     query = """
-    SELECT * from events  -- WHERE id = '23487929637' AND type = 'IssueCommentEvent'
-    -- SELECT * from payloads  WHERE id = '23487929637' -- AND type = 'IssueCommentEvent'
+    -- SELECT * from events  -- WHERE id = '23487929637' AND type = 'IssueCommentEvent'
+    SELECT id, userId, COUNT (*) AS user_count  FROM payloads GROUP BY id, userId
     """
     try:
         rows = session.execute(query)
