@@ -5,18 +5,15 @@ import os
 from typing import List
 
 table_drop_events = "DROP TABLE IF EXISTS events"
-table_drop_payloads = "DROP TABLE IF EXISTS Payload"
+table_drop_payloads = "DROP TABLE IF EXISTS payloads"
 
-
-
-table_create = """
+table_create_events = """
     CREATE TABLE IF NOT EXISTS events
     (
         id text,
         type text,
         action text,
         public text,
-        created_at TIMESTAMP,
         PRIMARY KEY (
             id,
             type
@@ -24,25 +21,26 @@ table_create = """
     )
 """
 
-# Payload
 table_create_payloads = """
-    CREATE TABLE IF NOT EXISTS Payload (
-        eventId TEXT NOT NULL,
-        action TEXT,
+    CREATE TABLE IF NOT EXISTS payloads
+    (
+        id text,
+        action text,
         userId TEXT,
         userLogin TEXT,
-        PRIMARY KEY (eventId)
+        PRIMARY KEY (
+            id
+        )
     )
 """
 
 create_table_queries = [
-    #table_create_payloads,
-    #table_create_events,
-    table_create,
+    table_create_events,
+    table_create_payloads
 ]
 drop_table_queries = [
     table_drop_events,
-    #table_drop_payloads,
+    table_drop_payloads,
 ]
 
 def drop_tables(session):
@@ -85,52 +83,23 @@ def process(session, filepath):
         with open(datafile, "r") as f:
             data = json.loads(f.read())
             for each in data:
-             
-                # Insert data into tables event
-                query = f"""INSERT INTO events (id, type, public) VALUES ('{each["id"]}', '{each["type"]}', '{each["public"]}')"""
-                session.execute(query)
-                
-                # Insert table 
+
                 try:
-                    insert_statement_event = f"""
-                        INSERT INTO Event (eventId,type,action,public,created_at) 
-                        VALUES ('{each["id"]}'
-                                , '{each["type"]}'
-                                , '{each["payload"]["action"]}'
-                                , '{each["public"]}'
-                                , '{each["created_at"]}'
-                                )
-                        ON CONFLICT (eventId) DO NOTHING
-                    """
-                    session.execute(insert_statement_event)
+                    # Insert data into tables events
+                    query = f"""INSERT INTO events (id, type, action, public) VALUES ('{each["id"]}', '{each["type"]}', '{each["payload"]["action"]}', '{each["public"]}')"""
+                    session.execute(query)
+                    i = i+1
                 except:
                     pass
 
-                # Insert table Payload
                 try:
-                    insert_statement_payload = f"""
-                        INSERT INTO Payload (eventId,action,userId,userLogin) 
-                        VALUES ('{each["id"]}'
-                                , '{each["type"]}'
-                                , '{each["payload"]["action"]}'
-                                , '{each["payload"]["user"]["id"]}'
-                                , '{each["payload"]["user"]["login"]}'
-                                )
-                        ON CONFLICT (eventId) DO NOTHING
-                    """
-                    session.execute(insert_statement_payload)
+                    # Insert data into tables payloads
+                    query = f"""INSERT INTO payloads (id, action, userId, userLogin) VALUES ('{each["id"]}', '{each["payload"]["action"]}', '{each["payload"]["issue"]["user"]["id"]}', '{each["payload"]["issue"]["user"]["login"]}')"""
+                    session.execute(query)
                 except:
                     pass
 
 
-                # try:
-                # session.commit()
-                i = i+1
-
-                # except:
-                    # Rolling back in case of error
-                    # session.rollback()
-    
     print("Data inserted total " + str(i) + " records")
 
 
@@ -163,7 +132,8 @@ def main():
    
     # Select data in Cassandra and print them to stdout
     query = """
-    SELECT * from events -- WHERE id = '23487929637' AND type = 'IssueCommentEvent'
+    SELECT * from events  -- WHERE id = '23487929637' AND type = 'IssueCommentEvent'
+    -- SELECT * from payloads  WHERE id = '23487929637' -- AND type = 'IssueCommentEvent'
     """
     try:
         rows = session.execute(query)
