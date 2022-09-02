@@ -99,7 +99,7 @@ def process(session, filepath):
 def insert_data(session):
 
     query_select = """
-    SELECT actor_login, COUNT (*)  AS user_count  FROM  total_events  GROUP BY  actor_login  -- limit 10
+    SELECT actor_login, COUNT (*)  AS user_count  FROM  total_events  GROUP BY  actor_login  
     """
     try:
         rows = session.execute(query_select)
@@ -161,8 +161,6 @@ def main():
         if (i < 10):
             print(row)
             i = i+1
-
-    
 
 
 if __name__ == "__main__":
