@@ -3,20 +3,57 @@ import psycopg2
 
 drop_table_queries = [
     "DROP TABLE IF EXISTS events",
+    "DROP TABLE IF EXISTS actors",
+    "DROP TABLE IF EXISTS repos",
+    "DROP TABLE IF EXISTS payloads",
+    "DROP TABLE IF EXISTS orgs",
 ]
 create_table_queries = [
     """
-    CREATE TABLE IF NOT EXISTS staging_events (
-        id text,
+    CREATE TABLE IF NOT EXISTS events (
+        eventId text,
         type text,
         actor text,
         repo text,
+        action text,
+        public BOOLEAN,
         created_at text
     )
     """,
     """
-    CREATE TABLE IF NOT EXISTS events (
-        id int
+    CREATE TABLE IF NOT EXISTS actors (
+        actorId int,
+        login text,
+        display_login text,
+        gravatar_id text,
+        url text,
+        avatar_url text
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS repos (
+        repoId int,
+        name text,
+        url text
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS payloads (
+        push_id int,
+        size int,
+        distinct_size int,
+        ref text,
+        head text,
+        before text
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS orgs (
+        orgId int,
+        login text,
+        gravatar_id text,
+        url text,
+        avatar_url text
     )
     """,
 ]
