@@ -107,7 +107,7 @@ def insert_tables(cur, conn):
 
 def main():
     host = ""
-    dname = ""
+    dbname = ""
     user = ""
     password = ""
     port = ""
