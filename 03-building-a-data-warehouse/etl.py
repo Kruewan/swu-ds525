@@ -59,9 +59,9 @@ create_table_queries = [
 ]
 copy_table_queries = [
     """
-    COPY staging_events FROM 's3://zkan-swu-labs/github_events_01.json'
-    CREDENTIALS 'aws_iam_role=arn:aws:iam::377290081649:role/LabRole'
-    JSON 's3://zkan-swu-labs/events_json_path.json'
+    COPY events FROM 's3://juneawsbucket/github_events_01.json'
+    CREDENTIALS 'aws_iam_role=arn:aws:iam::890710224274:role/LabRole'
+    JSON 's3://juneawsbucket/events_json_path.json'
     REGION 'us-east-1'
     """,
 ]
@@ -69,14 +69,20 @@ insert_table_queries = [
     """
     INSERT INTO
       events (
-        id
+        eventId ,
+        type ,
+        actor ,
+        repo ,
+        action ,
+        public ,
+        created_at 
       )
     SELECT
-      DISTINCT id,
+      DISTINCT eventId,
     FROM
-      staging_events
+      events
     WHERE
-      id NOT IN (SELECT DISTINCT id FROM events)
+      eventId NOT IN (SELECT DISTINCT eventId FROM events)
     """,
 ]
 
@@ -93,7 +99,7 @@ def create_tables(cur, conn):
         conn.commit()
 
 
-def load_staging_tables(cur, conn):
+def load_tables(cur, conn):
     for query in copy_table_queries:
         cur.execute(query)
         conn.commit()
@@ -118,14 +124,14 @@ def main():
     drop_tables(cur, conn)
     create_tables(cur, conn)
     load_tables(cur, conn)
-    insert_tables(cur, conn)
+    #insert_tables(cur, conn)
 
-    query = "select * from category"
-    cur.execute(query)
+    #query = "select * from category"
+    #cur.execute(query)
 
-    records = cur.fetchall()
-    for row in records:
-        print(row)
+    #records = cur.fetchall()
+    #for row in records:
+    #    print(row)
 
     conn.close()
 
