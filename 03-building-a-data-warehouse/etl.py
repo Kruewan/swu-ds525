@@ -7,6 +7,7 @@ drop_table_queries = [
     "DROP TABLE IF EXISTS repos",
     "DROP TABLE IF EXISTS payloads",
     "DROP TABLE IF EXISTS orgs",
+    "DROP TABLE IF EXISTS events_staging",
 ]
 create_table_queries = [
     """
@@ -18,6 +19,12 @@ create_table_queries = [
         action text,
         public BOOLEAN,
         created_at text
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS events_staging (
+        type text,
+        action text
     )
     """,
     """
@@ -68,21 +75,16 @@ copy_table_queries = [
 insert_table_queries = [
     """
     INSERT INTO
-      events (
-        eventId ,
+      events_staging (
         type ,
-        actor ,
-        repo ,
-        action ,
-        public ,
-        created_at 
+        action 
       )
     SELECT
-      DISTINCT eventId,
+        type, action
     FROM
       events
     WHERE
-      eventId NOT IN (SELECT DISTINCT eventId FROM events)
+      type NOT IN (SELECT DISTINCT type FROM events_staging)
     """,
 ]
 
@@ -124,14 +126,13 @@ def main():
     drop_tables(cur, conn)
     create_tables(cur, conn)
     load_tables(cur, conn)
-    #insert_tables(cur, conn)
+    insert_tables(cur, conn)
 
-    #query = "select * from category"
-    #cur.execute(query)
-
-    #records = cur.fetchall()
-    #for row in records:
-    #    print(row)
+    query = "select * from events_staging"
+    cur.execute(query)
+    records = cur.fetchall()
+    for row in records:
+        print(row)
 
     conn.close()
 
