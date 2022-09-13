@@ -4,6 +4,8 @@
     "$.type",
     "$.actor.login",
     "$.repo.name",
+    "$.payload.action",
+    "$.public",
     "$.created_at"
   ]
 }
