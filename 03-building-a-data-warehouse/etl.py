@@ -106,19 +106,26 @@ def insert_tables(cur, conn):
 
 
 def main():
-    host = ""
-    dbname = ""
-    user = ""
-    password = ""
-    port = ""
+    host = "redshift-cluster-1.cdagfejibaqn.us-east-1.redshift.amazonaws.com"
+    dbname = "dev"
+    user = "awsuser"
+    password = "hT51cr6y"
+    port = "5439"
     conn_str = f"host={host} dbname={dbname} user={user} password={password} port={port}"
     conn = psycopg2.connect(conn_str)
     cur = conn.cursor()
 
-    # drop_tables(cur, conn)
-    # create_tables(cur, conn)
-    # load_tables(cur, conn)
-    # insert_tables(cur, conn)
+    drop_tables(cur, conn)
+    create_tables(cur, conn)
+    load_tables(cur, conn)
+    insert_tables(cur, conn)
+
+    query = "select * from category"
+    cur.execute(query)
+
+    records = cur.fetchall()
+    for row in records:
+        print(row)
 
     conn.close()
 
