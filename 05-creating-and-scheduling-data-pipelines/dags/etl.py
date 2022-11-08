@@ -25,6 +25,30 @@ def _get_files(filepath: str) -> List[str]:
 
     return all_files
 
+    
+def _drop_tables():
+    hook = PostgresHook(postgres_conn_id="my_postgres")
+    conn = hook.get_conn()
+    cur = conn.cursor()
+
+    table_drop_events = "DROP TABLE IF EXISTS events"
+    table_drop_actors = "DROP TABLE IF EXISTS actors"
+    table_drop_repos = "DROP TABLE IF EXISTS Repo"
+    table_drop_payloads = "DROP TABLE IF EXISTS Payload"
+    table_drop_orgs = "DROP TABLE IF EXISTS Org"
+
+    drop_table_queries = [
+        table_drop_events,
+        table_drop_actors,
+        table_drop_repos,
+        table_drop_payloads,
+        table_drop_orgs,
+    ]
+    
+    for query in drop_table_queries:
+        cur.execute(query)
+        conn.commit()
+
 
 def _create_tables():
     hook = PostgresHook(postgres_conn_id="my_postgres")
@@ -33,24 +57,71 @@ def _create_tables():
 
     table_create_actors = """
         CREATE TABLE IF NOT EXISTS actors (
-            id int,
-            login text,
-            PRIMARY KEY(id)
+            actorId INT NOT NULL,
+            login VARCHAR(255),
+            display_login VARCHAR(255),
+            gravatar_id VARCHAR(255),
+            url VARCHAR(255),
+            avatar_url VARCHAR(255),
+            PRIMARY KEY (actorId)
         )
     """
     table_create_events = """
         CREATE TABLE IF NOT EXISTS events (
-            id text,
-            type text,
-            actor_id int,
-            PRIMARY KEY(id),
-            CONSTRAINT fk_actor FOREIGN KEY(actor_id) REFERENCES actors(id)
+            eventId TEXT NOT NULL,
+            type VARCHAR(255),
+            actorId INT NOT NULL,
+            repoId INT NOT NULL,
+            action VARCHAR(255),
+            public BOOLEAN,
+            created_at TIMESTAMP,
+            orgId INT,
+            PRIMARY KEY (eventId),
+            CONSTRAINT fk_actor FOREIGN KEY (actorId)
+                REFERENCES actors (actorId),
+            CONSTRAINT fk_repo FOREIGN KEY (repoId)
+                REFERENCES Repo (repoId)
         )
     """
+    table_create_repos = """
+        CREATE TABLE IF NOT EXISTS Repo (
+            repoId INT NOT NULL,
+            name VARCHAR(255),
+            url VARCHAR(255),
+            PRIMARY KEY (repoId)
+        )
+    """
+    table_create_payloads = """
+        CREATE TABLE IF NOT EXISTS Payload (
+            push_id INT,
+            action VARCHAR(255),
+            ref VARCHAR(255),
+            author_email VARCHAR(255),
+            author_name VARCHAR(255),
+            message VARCHAR(255),
+            distincts BOOLEAN,
+            url VARCHAR(255)
+        )
+    """
+    table_create_orgs = """
+        CREATE TABLE IF NOT EXISTS Org (
+            orgId INT NOT NULL,
+            login VARCHAR(255),
+            gravatar_id VARCHAR(255),
+            url VARCHAR(255),
+            avatar_url VARCHAR(255),
+            PRIMARY KEY (orgId)
+        )
+    """
+
     create_table_queries = [
         table_create_actors,
+        table_create_repos,
+        table_create_payloads,
+        table_create_orgs,
         table_create_events,
     ]
+    
     for query in create_table_queries:
         cur.execute(query)
         conn.commit()
@@ -67,58 +138,76 @@ def _process(**context):
     all_files = ti.xcom_pull(task_ids="get_files", key="return_value")
     # all_files = get_files(filepath)
 
+    i = 0
     for datafile in all_files:
         with open(datafile, "r") as f:
             data = json.loads(f.read())
             for each in data:
-                # Print some sample data
                 
-                if each["type"] == "IssueCommentEvent":
-                    print(
-                        each["id"], 
-                        each["type"],
-                        each["actor"]["id"],
-                        each["actor"]["login"],
-                        each["repo"]["id"],
-                        each["repo"]["name"],
-                        each["created_at"],
-                        each["payload"]["issue"]["url"],
-                    )
-                else:
-                    print(
-                        each["id"], 
-                        each["type"],
-                        each["actor"]["id"],
-                        each["actor"]["login"],
-                        each["repo"]["id"],
-                        each["repo"]["name"],
-                        each["created_at"],
-                    )
-
                 # Insert data into tables here
-                insert_statement = f"""
-                    INSERT INTO actors (
-                        id,
-                        login
-                    ) VALUES ({each["actor"]["id"]}, '{each["actor"]["login"]}')
-                    ON CONFLICT (id) DO NOTHING
+                
+                insert_statement_actor = f"""
+                    INSERT INTO actors (actorId,login,display_login,gravatar_id,url,avatar_url)
+                    VALUES ('{each["actor"]["id"]}'
+                            , '{each["actor"]["login"]}'
+                            , '{each["actor"]["display_login"]}'
+                            , '{each["actor"]["gravatar_id"]}'
+                            , '{each["actor"]["url"]}'
+                            , '{each["actor"]["avatar_url"]}')
+                    ON CONFLICT (actorId) DO NOTHING
                 """
-                # print(insert_statement)
-                cur.execute(insert_statement)
+                cur.execute(insert_statement_actor)
 
-                # Insert data into tables here
-                insert_statement = f"""
-                    INSERT INTO events (
-                        id,
-                        type,
-                        actor_id
-                    ) VALUES ('{each["id"]}', '{each["type"]}', '{each["actor"]["id"]}')
-                    ON CONFLICT (id) DO NOTHING
+                insert_statement_repo = f"""
+                    INSERT INTO Repo (repoId,name,url)
+                    VALUES ('{each["repo"]["id"]}'
+                            , '{each["repo"]["name"]}'
+                            , '{each["repo"]["url"]}')
+                    ON CONFLICT (repoId) DO NOTHING
                 """
-                # print(insert_statement)
-                cur.execute(insert_statement)
+                cur.execute(insert_statement_repo)
 
-                conn.commit()
+                try:
+                    insert_statement_org = f"""
+                        INSERT INTO Org (orgId,login,gravatar_id,url,avatar_url)
+                        VALUES ('{each["org"]["id"]}'
+                                , '{each["org"]["login"]}'
+                                , '{each["org"]["gravatar_id"]}'
+                                , '{each["org"]["url"]}'
+                                , '{each["org"]["avatar_url"]}')
+                        ON CONFLICT (orgId) DO NOTHING
+                    """
+                    cur.execute(insert_statement_org)
+                except:
+                    pass
+
+                try:
+                    insert_statement_event = f"""
+                        INSERT INTO events (eventId,type,actorId,repoId,public,created_at,orgId) 
+                        VALUES ('{each["id"]}'
+                                , '{each["type"]}'
+                                , '{each["actor"]["id"]}'
+                                , '{each["repo"]["id"]}'
+                                , '{each["public"]}'
+                                , '{each["created_at"]}'
+                                , '{each["org"]["id"]}'
+                                )
+                        ON CONFLICT (eventId) DO NOTHING
+                    """
+                    cur.execute(insert_statement_event)
+                except:
+                    pass
+
+               
+                try:
+                    conn.commit()
+                    i = i+1
+
+                except:
+                    # Rolling back in case of error
+                    conn.rollback()
+    
+    print("Data inserted total " + str(i) + " records")
 
 
 with DAG(
@@ -136,6 +225,11 @@ with DAG(
             "filepath": "/opt/airflow/dags/data",
         }
     )
+    
+    drop_tables = PythonOperator(
+        task_id="drop_tables",
+        python_callable=_drop_tables,
+    )
 
     create_tables = PythonOperator(
         task_id="create_tables",
@@ -147,4 +241,4 @@ with DAG(
         python_callable=_process,
     )
 
-    [get_files, create_tables] >> process
+    drop_tables >> [get_files, create_tables] >> process
