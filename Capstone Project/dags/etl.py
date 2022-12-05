@@ -79,10 +79,10 @@ def _insert_tables():
     table_insert_accidents = """
         INSERT INTO
             accidents_staging (
-                id, cause 
+                id, expw_step, cause 
             )
             SELECT
-                id, cause
+                id, expw_step, cause
             FROM
                 accidents
             WHERE
