@@ -13,36 +13,39 @@ from airflow.providers.postgres.hooks.postgres import PostgresHook
 
 def _upload_files():
 
-    aws_access_key_id = ASIA46YTXNWJI2PQSNOC
-    aws_secret_access_key = c7u6/BTOJY1o7HiY3AsOTmHyB4lHk9znZXcqbtt1
-    aws_session_token = FwoGZXIvYXdzEFsaDH5LTm6wdrUJt1/G/yLIAaZGcgQ5NYTAvL1WMK8uQTRH4IYGY75vnVIBzWcnsfC9DS/YO5iIs9qRlWoxsvPn6LfDo7x9RJhHm1sXafKNoSoz8l/v0q1UWN94Ez4IUV3HczuHF/J5bARU7FBw2n7W+zTtMlwj4Grn+mdVHbtYfdyngrEpKgzc1CYKLOrVZB1pvha4nuWe+ycIzOqomZ2DIDfjuq1uK7cGqEne8bQkpuzSE3TwuMY1Zsyq2FO5TSqW8kyOuUWmwe2S76vyxK5BNSxEh4ndyeu1KPyX0ZwGMi3Zol/pNOteafYs1j5H0pJEiP13wgworPVjeMb861eTu/FFDRpUrqB7kzbGHt8
+    aws_access_key_id = "ASIA46YTXNWJI2PQSNOC"
+    aws_secret_access_key = "c7u6/BTOJY1o7HiY3AsOTmHyB4lHk9znZXcqbtt1"
+    aws_session_token = "FwoGZXIvYXdzEFsaDH5LTm6wdrUJt1/G/yLIAaZGcgQ5NYTAvL1WMK8uQTRH4IYGY75vnVIBzWcnsfC9DS/YO5iIs9qRlWoxsvPn6LfDo7x9RJhHm1sXafKNoSoz8l/v0q1UWN94Ez4IUV3HczuHF/J5bARU7FBw2n7W+zTtMlwj4Grn+mdVHbtYfdyngrEpKgzc1CYKLOrVZB1pvha4nuWe+ycIzOqomZ2DIDfjuq1uK7cGqEne8bQkpuzSE3TwuMY1Zsyq2FO5TSqW8kyOuUWmwe2S76vyxK5BNSxEh4ndyeu1KPyX0ZwGMi3Zol/pNOteafYs1j5H0pJEiP13wgworPVjeMb861eTu/FFDRpUrqB7kzbGHt8"
 
-    client = boto3.client(
+    s3 = boto3.resource(
         "s3",
         aws_access_key_id=aws_access_key_id,
         aws_secret_access_key=aws_secret_access_key,
         aws_session_token=aws_session_token
     )
-    print(client)
 
-    response = client.list_objects(
-        Bucket="zkan-swu-labs",
-        MaxKeys=2,
+    s3.meta.client.upload_file(
+        "/opt/airflow/dags/data/accidentmonth.csv", 
+        "junnieebucket", 
+        "accidentmonth.csv",
     )
-
-    contents = response["Contents"]
-    for content in contents:
-        print(content["Key"], content["Size"])
 
 
 
 def _get_files():
+    hook = PostgresHook(postgres_conn_id="my_redshift")
+    conn = hook.get_conn()
+    cur = conn.cursor()
 
     copy_table_queries = [
         """
-        COPY events FROM 's3://juneawsbucket/github_events_01.json'
-        CREDENTIALS 'aws_iam_role=arn:aws:iam::890710224274:role/LabRole'
-        JSON 's3://juneawsbucket/events_json_path.json'
+        COPY accidents FROM 's3://junnieebucket/accidentmonth.csv'
+        ACCESS_KEY_ID 'ASIA46YTXNWJI2PQSNOC'
+        SECRET_ACCESS_KEY 'c7u6/BTOJY1o7HiY3AsOTmHyB4lHk9znZXcqbtt1'
+        SESSION_TOKEN 'FwoGZXIvYXdzEFsaDH5LTm6wdrUJt1/G/yLIAaZGcgQ5NYTAvL1WMK8uQTRH4IYGY75vnVIBzWcnsfC9DS/YO5iIs9qRlWoxsvPn6LfDo7x9RJhHm1sXafKNoSoz8l/v0q1UWN94Ez4IUV3HczuHF/J5bARU7FBw2n7W+zTtMlwj4Grn+mdVHbtYfdyngrEpKgzc1CYKLOrVZB1pvha4nuWe+ycIzOqomZ2DIDfjuq1uK7cGqEne8bQkpuzSE3TwuMY1Zsyq2FO5TSqW8kyOuUWmwe2S76vyxK5BNSxEh4ndyeu1KPyX0ZwGMi3Zol/pNOteafYs1j5H0pJEiP13wgworPVjeMb861eTu/FFDRpUrqB7kzbGHt8'
+        CSV
+        ignoreheader 1
+        ACCEPTINVCHARS AS '_'
         REGION 'us-east-1'
         """,
     ]
@@ -51,9 +54,9 @@ def _get_files():
         cur.execute(query)
         conn.commit()
 
-    
+     
 def _drop_tables():
-    hook = PostgresHook(postgres_conn_id="my_postgres")
+    hook = PostgresHook(postgres_conn_id="my_redshift")
     conn = hook.get_conn()
     cur = conn.cursor()
 
@@ -69,23 +72,22 @@ def _drop_tables():
 
 
 def _create_tables():
-    hook = PostgresHook(postgres_conn_id="my_postgres")
+    hook = PostgresHook(postgres_conn_id="my_redshift")
     conn = hook.get_conn()
     cur = conn.cursor()
 
     table_create_accidents = """
         CREATE TABLE IF NOT EXISTS accidents (
-            id INT NOT NULL,
-            accident_date TIMESTAMP,
-            accident_time TIMESTAMP,
+           
+            accident_date VARCHAR(255),
+            accident_time VARCHAR(255),
             expw_step VARCHAR(255),
             weather_state VARCHAR(255),
-            injur_man INT,
-            injur_femel INT,
-            dead_man INT,
-            dead_femel INT,
-            cause VARCHAR(255),
-            PRIMARY KEY (id)
+            injur_man VARCHAR(255),
+            injur_femel VARCHAR(255),
+            dead_man VARCHAR(255),
+            dead_femel VARCHAR(255),
+            cause VARCHAR(255)
         )
     """
     
@@ -129,7 +131,7 @@ def _insert_tables():
 
 with DAG(
     "etl",
-    start_date=timezone.datetime(2022, 10, 15),
+    start_date=timezone.datetime(2022, 12, 10),
     schedule="@daily",
     tags=["workshop"],
     catchup=False,
@@ -160,6 +162,7 @@ with DAG(
         python_callable=_insert_tables,
     )
     
-    upload_files
-
+  
     #drop_tables >> [get_files, create_tables] >> insert_tables
+
+    upload_files >> drop_tables >> create_tables >> get_files
