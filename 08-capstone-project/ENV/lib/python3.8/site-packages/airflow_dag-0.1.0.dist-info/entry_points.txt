@@ -1,0 +1,3 @@
+[console_scripts]
+airflow-dag = airflow_dag.cli:cli
+
