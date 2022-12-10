@@ -144,20 +144,22 @@ with DAG(
         python_callable=_get_files,
     )
     
-    drop_tables = PythonOperator(
-        task_id="drop_tables",
-        python_callable=_drop_tables,
-    )
-
     create_tables = PythonOperator(
         task_id="create_tables",
         python_callable=_create_tables,
     )
+
+    #drop_tables = PythonOperator(
+    #    task_id="drop_tables",
+    #    python_callable=_drop_tables,
+    #)
 
     #insert_tables = PythonOperator(
     #    task_id="insert_tables",
     #    python_callable=_insert_tables,
     #)
     
-  
-    upload_files >> drop_tables >> create_tables >> get_files
+    # cannot drop table accidents because other objects depend on it
+    #upload_files >> drop_tables >> create_tables >> get_files
+
+    upload_files >> create_tables >> get_files
