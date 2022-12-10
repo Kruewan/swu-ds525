@@ -45,7 +45,6 @@ def _get_files():
         SESSION_TOKEN 'FwoGZXIvYXdzEFsaDH5LTm6wdrUJt1/G/yLIAaZGcgQ5NYTAvL1WMK8uQTRH4IYGY75vnVIBzWcnsfC9DS/YO5iIs9qRlWoxsvPn6LfDo7x9RJhHm1sXafKNoSoz8l/v0q1UWN94Ez4IUV3HczuHF/J5bARU7FBw2n7W+zTtMlwj4Grn+mdVHbtYfdyngrEpKgzc1CYKLOrVZB1pvha4nuWe+ycIzOqomZ2DIDfjuq1uK7cGqEne8bQkpuzSE3TwuMY1Zsyq2FO5TSqW8kyOuUWmwe2S76vyxK5BNSxEh4ndyeu1KPyX0ZwGMi3Zol/pNOteafYs1j5H0pJEiP13wgworPVjeMb861eTu/FFDRpUrqB7kzbGHt8'
         CSV
         ignoreheader 1
-        ACCEPTINVCHARS AS '_'
         REGION 'us-east-1'
         """,
     ]
@@ -79,14 +78,14 @@ def _create_tables():
     table_create_accidents = """
         CREATE TABLE IF NOT EXISTS accidents (
            
-            accident_date VARCHAR(255),
-            accident_time VARCHAR(255),
+            accident_date VARCHAR(10),
+            accident_time VARCHAR(10),
             expw_step VARCHAR(255),
             weather_state VARCHAR(255),
-            injur_man VARCHAR(255),
-            injur_femel VARCHAR(255),
-            dead_man VARCHAR(255),
-            dead_femel VARCHAR(255),
+            injur_man int,
+            injur_femel int,
+            dead_man int,
+            dead_femel int,
             cause VARCHAR(255)
         )
     """
