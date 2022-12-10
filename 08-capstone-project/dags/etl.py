@@ -76,7 +76,6 @@ def _create_tables():
 
     table_create_accidents = """
         CREATE TABLE IF NOT EXISTS accidents (
-           
             accident_date VARCHAR(10),
             accident_time VARCHAR(10),
             expw_step VARCHAR(255),
@@ -155,10 +154,10 @@ with DAG(
         python_callable=_create_tables,
     )
 
-    insert_tables = PythonOperator(
-        task_id="insert_tables",
-        python_callable=_insert_tables,
-    )
+    #insert_tables = PythonOperator(
+    #    task_id="insert_tables",
+    #    python_callable=_insert_tables,
+    #)
     
   
     upload_files >> drop_tables >> create_tables >> get_files
