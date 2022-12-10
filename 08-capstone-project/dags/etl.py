@@ -31,7 +31,6 @@ def _upload_files():
     )
 
 
-
 def _get_files():
     hook = PostgresHook(postgres_conn_id="my_redshift")
     conn = hook.get_conn()
@@ -162,6 +161,4 @@ with DAG(
     )
     
   
-    #drop_tables >> [get_files, create_tables] >> insert_tables
-
     upload_files >> drop_tables >> create_tables >> get_files
