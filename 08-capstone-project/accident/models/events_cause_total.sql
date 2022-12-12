@@ -1,4 +1,3 @@
 select 
-	count (*) , cause 
+	accident_date , cause 
 from {{ ref('stg_accidents') }}
-group by  cause

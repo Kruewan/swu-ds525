@@ -65,32 +65,42 @@ def _redshift_to_dataframe():
     table_select_events_accident_date = """ SELECT * FROM events_accident_date """
     cur.execute(table_select_events_accident_date)
     df = pd.DataFrame(cur.fetchall())
-    print(df)
     df.to_csv (r'/opt/airflow/dags/data/download/events_accident_date.csv', index = False) 
 
     table_select_events_cause = """ SELECT * FROM events_cause """
     cur.execute(table_select_events_cause)
     df = pd.DataFrame(cur.fetchall())
-    print(df)
     df.to_csv (r'/opt/airflow/dags/data/download/events_cause.csv', index = False) 
 
     table_select_events_expw_step = """ SELECT * FROM events_expw_step """
     cur.execute(table_select_events_expw_step)
     df = pd.DataFrame(cur.fetchall())
-    print(df)
     df.to_csv (r'/opt/airflow/dags/data/download/events_expw_step.csv', index = False) 
 
     table_select_events_total = """ SELECT * FROM events_total """
     cur.execute(table_select_events_total)
     df = pd.DataFrame(cur.fetchall())
-    print(df)
     df.to_csv (r'/opt/airflow/dags/data/download/events_total.csv', index = False) 
 
     table_select_events_weather_state = """ SELECT * FROM events_weather_state """
     cur.execute(table_select_events_weather_state)
     df = pd.DataFrame(cur.fetchall())
-    print(df)
     df.to_csv (r'/opt/airflow/dags/data/download/events_weather_state.csv', index = False) 
+
+    table_select_events_cause_total = """ SELECT * FROM  events_cause_total """
+    cur.execute(table_select_events_cause_total)
+    df = pd.DataFrame(cur.fetchall())
+    df.to_csv (r'/opt/airflow/dags/data/download/events_cause_total.csv', index = False) 
+
+    table_select_events_expw_step_total = """ SELECT * FROM  events_expw_step_total """
+    cur.execute(table_select_events_expw_step_total)
+    df = pd.DataFrame(cur.fetchall())
+    df.to_csv (r'/opt/airflow/dags/data/download/events_expw_step_total.csv', index = False) 
+
+    table_select_events_weather_state_total = """ SELECT * FROM  events_weather_state_total """
+    cur.execute(table_select_events_weather_state_total)
+    df = pd.DataFrame(cur.fetchall())
+    df.to_csv (r'/opt/airflow/dags/data/download/events_weather_state_total.csv', index = False) 
 
      
 def _drop_tables():

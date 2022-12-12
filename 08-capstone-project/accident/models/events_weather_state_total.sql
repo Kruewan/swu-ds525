@@ -1,5 +1,4 @@
 select 
-	count (*) , weather_state 
+	accident_date , weather_state 
 from {{ ref('stg_accidents') }}
-group by  weather_state
 
