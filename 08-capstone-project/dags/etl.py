@@ -12,10 +12,10 @@ from airflow.providers.postgres.hooks.postgres import PostgresHook
 
 
 def _upload_files():
-
-    aws_access_key_id = "ASIA46YTXNWJI2PQSNOC"
-    aws_secret_access_key = "c7u6/BTOJY1o7HiY3AsOTmHyB4lHk9znZXcqbtt1"
-    aws_session_token = "FwoGZXIvYXdzEFsaDH5LTm6wdrUJt1/G/yLIAaZGcgQ5NYTAvL1WMK8uQTRH4IYGY75vnVIBzWcnsfC9DS/YO5iIs9qRlWoxsvPn6LfDo7x9RJhHm1sXafKNoSoz8l/v0q1UWN94Ez4IUV3HczuHF/J5bARU7FBw2n7W+zTtMlwj4Grn+mdVHbtYfdyngrEpKgzc1CYKLOrVZB1pvha4nuWe+ycIzOqomZ2DIDfjuq1uK7cGqEne8bQkpuzSE3TwuMY1Zsyq2FO5TSqW8kyOuUWmwe2S76vyxK5BNSxEh4ndyeu1KPyX0ZwGMi3Zol/pNOteafYs1j5H0pJEiP13wgworPVjeMb861eTu/FFDRpUrqB7kzbGHt8"
+    
+    aws_access_key_id = "ASIA46YTXNWJHYNM4G4F"
+    aws_secret_access_key = "9CZvGeMh4IrAM2GJIzSmpF0nG/T0NQXIsYR3HezA"
+    aws_session_token = "FwoGZXIvYXdzEIb//////////wEaDJEjudpUhIt7vuGntiLIAWKw8i9swjQYhdnHffExsbOuZnBP1Defgt9KO49LK54Pb5k1K5E3qyIvMDgXbj3YDE0+h+1dCX0dxQ9P/T74a7MXi5VWsoZ+r23dfHQKZDn2a0VnM/Ot0OXuwm+SriXwzfsaQQmmPdAAdzaL0XWMx2LSLCPXqkVoO4aTpGQJq7vNXLtlSrkrOvkwe6npkKw5Z5Rr9DRqVjxKwJwxYSCw0gcJ9PbZhHKF22FcLTNyI/ER0Urjf5faGH+teZkirp3eNc9TYeRrGVOGKPPh2pwGMi3DpBuOCRNuyUtgTSKmxIujd3fB4gkOfz0NZ4OsOH0o9EWtqF83L8L1lATjAWY"
 
     s3 = boto3.resource(
         "s3",
@@ -39,9 +39,9 @@ def _get_files():
     copy_table_queries = [
         """
         COPY accidents FROM 's3://junnieebucket/accidentmonth.csv'
-        ACCESS_KEY_ID 'ASIA46YTXNWJI2PQSNOC'
-        SECRET_ACCESS_KEY 'c7u6/BTOJY1o7HiY3AsOTmHyB4lHk9znZXcqbtt1'
-        SESSION_TOKEN 'FwoGZXIvYXdzEFsaDH5LTm6wdrUJt1/G/yLIAaZGcgQ5NYTAvL1WMK8uQTRH4IYGY75vnVIBzWcnsfC9DS/YO5iIs9qRlWoxsvPn6LfDo7x9RJhHm1sXafKNoSoz8l/v0q1UWN94Ez4IUV3HczuHF/J5bARU7FBw2n7W+zTtMlwj4Grn+mdVHbtYfdyngrEpKgzc1CYKLOrVZB1pvha4nuWe+ycIzOqomZ2DIDfjuq1uK7cGqEne8bQkpuzSE3TwuMY1Zsyq2FO5TSqW8kyOuUWmwe2S76vyxK5BNSxEh4ndyeu1KPyX0ZwGMi3Zol/pNOteafYs1j5H0pJEiP13wgworPVjeMb861eTu/FFDRpUrqB7kzbGHt8'
+        ACCESS_KEY_ID 'ASIA46YTXNWJHYNM4G4F'
+        SECRET_ACCESS_KEY '9CZvGeMh4IrAM2GJIzSmpF0nG/T0NQXIsYR3HezA'
+        SESSION_TOKEN 'FwoGZXIvYXdzEIb//////////wEaDJEjudpUhIt7vuGntiLIAWKw8i9swjQYhdnHffExsbOuZnBP1Defgt9KO49LK54Pb5k1K5E3qyIvMDgXbj3YDE0+h+1dCX0dxQ9P/T74a7MXi5VWsoZ+r23dfHQKZDn2a0VnM/Ot0OXuwm+SriXwzfsaQQmmPdAAdzaL0XWMx2LSLCPXqkVoO4aTpGQJq7vNXLtlSrkrOvkwe6npkKw5Z5Rr9DRqVjxKwJwxYSCw0gcJ9PbZhHKF22FcLTNyI/ER0Urjf5faGH+teZkirp3eNc9TYeRrGVOGKPPh2pwGMi3DpBuOCRNuyUtgTSKmxIujd3fB4gkOfz0NZ4OsOH0o9EWtqF83L8L1lATjAWY'
         CSV
         ignoreheader 1
         REGION 'us-east-1'
