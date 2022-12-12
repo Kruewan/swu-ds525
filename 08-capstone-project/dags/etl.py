@@ -3,6 +3,8 @@ import glob
 import os
 #import psycopg2
 import boto3
+import csv
+import pandas as pd
 from typing import List
 from airflow import DAG
 from airflow.utils import timezone
@@ -51,6 +53,44 @@ def _get_files():
     for query in copy_table_queries:
         cur.execute(query)
         conn.commit()
+
+
+def _redshift_to_dataframe():
+
+    # Get data from Redshift
+    hook = PostgresHook(postgres_conn_id="my_redshift")
+    conn = hook.get_conn()
+    cur = conn.cursor()
+
+    table_select_events_accident_date = """ SELECT * FROM events_accident_date """
+    cur.execute(table_select_events_accident_date)
+    df = pd.DataFrame(cur.fetchall())
+    print(df)
+    df.to_csv (r'/opt/airflow/dags/data/download/events_accident_date.csv', index = False) 
+
+    table_select_events_cause = """ SELECT * FROM events_cause """
+    cur.execute(table_select_events_cause)
+    df = pd.DataFrame(cur.fetchall())
+    print(df)
+    df.to_csv (r'/opt/airflow/dags/data/download/events_cause.csv', index = False) 
+
+    table_select_events_expw_step = """ SELECT * FROM events_expw_step """
+    cur.execute(table_select_events_expw_step)
+    df = pd.DataFrame(cur.fetchall())
+    print(df)
+    df.to_csv (r'/opt/airflow/dags/data/download/events_expw_step.csv', index = False) 
+
+    table_select_events_total = """ SELECT * FROM events_total """
+    cur.execute(table_select_events_total)
+    df = pd.DataFrame(cur.fetchall())
+    print(df)
+    df.to_csv (r'/opt/airflow/dags/data/download/events_total.csv', index = False) 
+
+    table_select_events_weather_state = """ SELECT * FROM events_weather_state """
+    cur.execute(table_select_events_weather_state)
+    df = pd.DataFrame(cur.fetchall())
+    print(df)
+    df.to_csv (r'/opt/airflow/dags/data/download/events_weather_state.csv', index = False) 
 
      
 def _drop_tables():
@@ -149,6 +189,12 @@ with DAG(
         python_callable=_create_tables,
     )
 
+    redshift_to_dataframe = PythonOperator(
+        task_id="redshift_to_dataframe",
+        python_callable=_redshift_to_dataframe,
+    )
+
+
     #drop_tables = PythonOperator(
     #    task_id="drop_tables",
     #    python_callable=_drop_tables,
@@ -162,4 +208,4 @@ with DAG(
     # cannot drop table accidents because other objects depend on it
     #upload_files >> drop_tables >> create_tables >> get_files
 
-    upload_files >> create_tables >> get_files
+    upload_files >> create_tables >> get_files >> redshift_to_dataframe

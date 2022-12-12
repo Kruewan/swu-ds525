@@ -1,12 +1,12 @@
-import json
-import glob
-import os
-#import psycopg2
-import boto3
-from typing import List
-from airflow import DAG
-from airflow.utils import timezone
-from airflow.operators.python import PythonOperator
+#import json
+#import glob
+#import os
+import psycopg2
+#import boto3
+#from typing import List
+#from airflow import DAG
+#from airflow.utils import timezone
+#from airflow.operators.python import PythonOperator
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 
 def redshift_to_dataframe(data):
@@ -27,7 +27,7 @@ def redshift_to_dataframe(data):
 
         df = pd.DataFrame(columns=df_labels, data=df_data)
 
-        df.to_csv('your-file.csv')
+        df.to_csv('accidentmonth.csv')
 
 
 
