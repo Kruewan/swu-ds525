@@ -9,8 +9,8 @@ select
     dead_femel ,
     cause 
 from {{ ref('stg_accidents') }}
-where accident_date  != '' 
-and   accident_time  != '' 
-and   cause	         != '' 
-and   expw_step		 != '' 
+where accident_date  IS NOT NULL
+and   accident_time  IS NOT NULL
+and   cause	         IS NOT NULL
+and   expw_step		 IS NOT NULL
 
