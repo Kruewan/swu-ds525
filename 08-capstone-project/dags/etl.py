@@ -74,7 +74,7 @@ def _drop_tables():
     conn = hook.get_conn()
     cur = conn.cursor()
 
-    table_drop_accidents = "DROP TABLE IF EXISTS accidents"
+    table_drop_accidents = "DROP TABLE accidents cascade"
 
     drop_table_queries = [
         table_drop_accidents
@@ -109,8 +109,7 @@ def _create_tables():
 
     table_create_accidents = """
         CREATE TABLE IF NOT EXISTS accidents (
-            accident_date VARCHAR(50),
-            accident_date_new VARCHAR(10),
+            accident_date VARCHAR(10),
             accident_time VARCHAR(10),
             expw_step VARCHAR(255),
             weather_state VARCHAR(255),
@@ -192,5 +191,10 @@ with DAG(
         python_callable=_redshift_to_dataframe,
     )
 
+    drop_tables = PythonOperator(
+        task_id="drop_tables",
+        python_callable=_drop_tables,
+    )
 
-    upload_files >> create_tables >> delete_tables >> get_files >> redshift_to_dataframe
+    
+    upload_files >> drop_tables >> create_tables >> delete_tables >> get_files >> redshift_to_dataframe
