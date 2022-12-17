@@ -1,5 +1,6 @@
 select 
-	to_date(accident_date, 'YYYYMMDD', FALSE) AS accident_date  ,
+    accident_date , 
+	to_date(accident_date, 'YYYYMMDD', FALSE) AS accident_date_new  ,
     accident_time ,
     expw_step ,
     weather_state ,

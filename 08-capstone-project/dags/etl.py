@@ -109,7 +109,8 @@ def _create_tables():
 
     table_create_accidents = """
         CREATE TABLE IF NOT EXISTS accidents (
-            accident_date VARCHAR(10),
+            accident_date VARCHAR(50),
+            accident_date_new VARCHAR(10),
             accident_time VARCHAR(10),
             expw_step VARCHAR(255),
             weather_state VARCHAR(255),
