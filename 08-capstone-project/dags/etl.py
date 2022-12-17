@@ -14,10 +14,10 @@ from airflow.providers.postgres.hooks.postgres import PostgresHook
 
 
 def _upload_files():
-    
-    aws_access_key_id = "ASIA46YTXNWJHYNM4G4F"
-    aws_secret_access_key = "9CZvGeMh4IrAM2GJIzSmpF0nG/T0NQXIsYR3HezA"
-    aws_session_token = "FwoGZXIvYXdzEIb//////////wEaDJEjudpUhIt7vuGntiLIAWKw8i9swjQYhdnHffExsbOuZnBP1Defgt9KO49LK54Pb5k1K5E3qyIvMDgXbj3YDE0+h+1dCX0dxQ9P/T74a7MXi5VWsoZ+r23dfHQKZDn2a0VnM/Ot0OXuwm+SriXwzfsaQQmmPdAAdzaL0XWMx2LSLCPXqkVoO4aTpGQJq7vNXLtlSrkrOvkwe6npkKw5Z5Rr9DRqVjxKwJwxYSCw0gcJ9PbZhHKF22FcLTNyI/ER0Urjf5faGH+teZkirp3eNc9TYeRrGVOGKPPh2pwGMi3DpBuOCRNuyUtgTSKmxIujd3fB4gkOfz0NZ4OsOH0o9EWtqF83L8L1lATjAWY"
+
+    aws_access_key_id = "ASIA46YTXNWJFHSTWQ65"
+    aws_secret_access_key = "E4681lIrRWPjbOw2mHkRGWQYx6P0ASgICrS0RcFZ"
+    aws_session_token = "FwoGZXIvYXdzEAAaDHCwPduzkRT/y1HT+SLIAdyLE8ezr/AQDO0GvWCFk9Z3CEYm1nxtST+ccjexYvCimJMR7WZpZOtzUVYrSK6TG5+8Wsjp8I5rNZDbvgfrRvY8v6G7aOXtUMAHWi3Cc3FMixdj96ktBdwVzQwcQbUFQLAFRCtBh4d8c1Oh2S/CXB4ChEitf5Gfefy6eO/jbJ5guGFVHugEbBDAaRTdLfi4RpGshGzHfgqazIJRSTqPq37451sNkBpbgwB+uCnHGkzrdEbBes6ULsWByQdgJ+u1UCkDv9xkjJ/9KNzB9ZwGMi08sFPnWmum6Mbu/JFYXPDjdprCxSUz6Sb+ZKyJ0grh5Uel+52DgAiehsYAZck"
 
     s3 = boto3.resource(
         "s3",
@@ -41,11 +41,11 @@ def _get_files():
     copy_table_queries = [
         """
         COPY accidents FROM 's3://junnieebucket/accidentmonth.csv'
-        ACCESS_KEY_ID 'ASIA46YTXNWJHYNM4G4F'
-        SECRET_ACCESS_KEY '9CZvGeMh4IrAM2GJIzSmpF0nG/T0NQXIsYR3HezA'
-        SESSION_TOKEN 'FwoGZXIvYXdzEIb//////////wEaDJEjudpUhIt7vuGntiLIAWKw8i9swjQYhdnHffExsbOuZnBP1Defgt9KO49LK54Pb5k1K5E3qyIvMDgXbj3YDE0+h+1dCX0dxQ9P/T74a7MXi5VWsoZ+r23dfHQKZDn2a0VnM/Ot0OXuwm+SriXwzfsaQQmmPdAAdzaL0XWMx2LSLCPXqkVoO4aTpGQJq7vNXLtlSrkrOvkwe6npkKw5Z5Rr9DRqVjxKwJwxYSCw0gcJ9PbZhHKF22FcLTNyI/ER0Urjf5faGH+teZkirp3eNc9TYeRrGVOGKPPh2pwGMi3DpBuOCRNuyUtgTSKmxIujd3fB4gkOfz0NZ4OsOH0o9EWtqF83L8L1lATjAWY'
+        ACCESS_KEY_ID 'ASIA46YTXNWJFHSTWQ65'
+        SECRET_ACCESS_KEY 'E4681lIrRWPjbOw2mHkRGWQYx6P0ASgICrS0RcFZ'
+        SESSION_TOKEN 'FwoGZXIvYXdzEAAaDHCwPduzkRT/y1HT+SLIAdyLE8ezr/AQDO0GvWCFk9Z3CEYm1nxtST+ccjexYvCimJMR7WZpZOtzUVYrSK6TG5+8Wsjp8I5rNZDbvgfrRvY8v6G7aOXtUMAHWi3Cc3FMixdj96ktBdwVzQwcQbUFQLAFRCtBh4d8c1Oh2S/CXB4ChEitf5Gfefy6eO/jbJ5guGFVHugEbBDAaRTdLfi4RpGshGzHfgqazIJRSTqPq37451sNkBpbgwB+uCnHGkzrdEbBes6ULsWByQdgJ+u1UCkDv9xkjJ/9KNzB9ZwGMi08sFPnWmum6Mbu/JFYXPDjdprCxSUz6Sb+ZKyJ0grh5Uel+52DgAiehsYAZck'
         CSV
-        ignoreheader 1
+        IGNOREHEADER 1
         REGION 'us-east-1'
         """,
     ]
@@ -119,6 +119,23 @@ def _drop_tables():
         conn.commit()
 
 
+def _delete_tables():
+    hook = PostgresHook(postgres_conn_id="my_redshift")
+    conn = hook.get_conn()
+    cur = conn.cursor()
+
+    table_drop_accidents = "DELETE FROM  accidents"
+
+    drop_table_queries = [
+        table_drop_accidents
+    ]
+    
+    for query in drop_table_queries:
+        cur.execute(query)
+        conn.commit()
+
+
+
 def _create_tables():
     hook = PostgresHook(postgres_conn_id="my_redshift")
     conn = hook.get_conn()
@@ -175,7 +192,6 @@ def _insert_tables():
 
 
 
-
 with DAG(
     "etl",
     start_date=timezone.datetime(2022, 12, 10),
@@ -204,6 +220,11 @@ with DAG(
         python_callable=_redshift_to_dataframe,
     )
 
+    delete_tables = PythonOperator(
+        task_id="delete_tables",
+        python_callable=_delete_tables,
+    )
+
 
     #drop_tables = PythonOperator(
     #    task_id="drop_tables",
@@ -215,7 +236,5 @@ with DAG(
     #    python_callable=_insert_tables,
     #)
     
-    # cannot drop table accidents because other objects depend on it
-    #upload_files >> drop_tables >> create_tables >> get_files
 
-    upload_files >> create_tables >> get_files >> redshift_to_dataframe
+    upload_files >> create_tables >> delete_tables >> get_files >> redshift_to_dataframe
