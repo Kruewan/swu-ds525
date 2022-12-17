@@ -197,4 +197,4 @@ with DAG(
     )
 
     
-    upload_files >> drop_tables >> create_tables >> delete_tables >> get_files >> redshift_to_dataframe
+    upload_files >> create_tables >> delete_tables >> get_files >> redshift_to_dataframe
