@@ -191,10 +191,10 @@ with DAG(
         python_callable=_redshift_to_dataframe,
     )
 
-    drop_tables = PythonOperator(
-        task_id="drop_tables",
-        python_callable=_drop_tables,
-    )
+    #drop_tables = PythonOperator(
+    #    task_id="drop_tables",
+    #    python_callable=_drop_tables,
+    #)
 
     
     upload_files >> create_tables >> delete_tables >> get_files >> redshift_to_dataframe
