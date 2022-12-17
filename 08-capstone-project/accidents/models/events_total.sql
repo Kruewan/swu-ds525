@@ -1,5 +1,5 @@
 select 
-	accident_date  ,
+	accident_date ,
     accident_time ,
     expw_step ,
     weather_state ,
