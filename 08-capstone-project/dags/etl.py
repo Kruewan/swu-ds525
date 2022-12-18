@@ -89,8 +89,98 @@ def _create_tables():
         )
     """
     
+    table_create_accident_2560 = """
+        CREATE TABLE IF NOT EXISTS accident_2560 (
+            accident_date VARCHAR(10),
+            accident_time VARCHAR(10),
+            expw_step VARCHAR(255),
+            weather_state VARCHAR(255),
+            injur_man int,
+            injur_femel int,
+            dead_man int,
+            dead_femel int,
+            cause VARCHAR(255)
+        )
+    """
+
+    table_create_accident_2561 = """
+        CREATE TABLE IF NOT EXISTS accident_2561 (
+            accident_date VARCHAR(10),
+            accident_time VARCHAR(10),
+            expw_step VARCHAR(255),
+            weather_state VARCHAR(255),
+            injur_man int,
+            injur_femel int,
+            dead_man int,
+            dead_femel int,
+            cause VARCHAR(255)
+        )
+    """
+
+    table_create_accident_2562 = """
+        CREATE TABLE IF NOT EXISTS accident_2562 (
+            accident_date VARCHAR(10),
+            accident_time VARCHAR(10),
+            expw_step VARCHAR(255),
+            weather_state VARCHAR(255),
+            injur_man int,
+            injur_femel int,
+            dead_man int,
+            dead_femel int,
+            cause VARCHAR(255)
+        )
+    """
+
+    table_create_accident_2563 = """
+        CREATE TABLE IF NOT EXISTS accident_2563 (
+            accident_date VARCHAR(10),
+            accident_time VARCHAR(10),
+            expw_step VARCHAR(255),
+            weather_state VARCHAR(255),
+            injur_man int,
+            injur_femel int,
+            dead_man int,
+            dead_femel int,
+            cause VARCHAR(255)
+        )
+    """
+
+    table_create_accident_2564 = """
+        CREATE TABLE IF NOT EXISTS accident_2564 (
+            accident_date VARCHAR(10),
+            accident_time VARCHAR(10),
+            expw_step VARCHAR(255),
+            weather_state VARCHAR(255),
+            injur_man int,
+            injur_femel int,
+            dead_man int,
+            dead_femel int,
+            cause VARCHAR(255)
+        )
+    """
+
+    table_create_accident_2565 = """
+        CREATE TABLE IF NOT EXISTS accident_2565 (
+            accident_date VARCHAR(10),
+            accident_time VARCHAR(10),
+            expw_step VARCHAR(255),
+            weather_state VARCHAR(255),
+            injur_man int,
+            injur_femel int,
+            dead_man int,
+            dead_femel int,
+            cause VARCHAR(255)
+        )
+    """
+    
     create_table_queries = [
-        table_create_accident_2559
+        table_create_accident_2559,
+        table_create_accident_2560,
+        table_create_accident_2561,
+        table_create_accident_2562,
+        table_create_accident_2563,
+        table_create_accident_2564,
+        table_create_accident_2565,
     ]
     
     for query in create_table_queries:
@@ -105,9 +195,21 @@ def _delete_tables():
     cur = conn.cursor()
 
     table_drop_accident_2559 = "DELETE FROM  accident_2559"
+    table_drop_accident_2560 = "DELETE FROM  accident_2560"
+    table_drop_accident_2561 = "DELETE FROM  accident_2561"
+    table_drop_accident_2562 = "DELETE FROM  accident_2562"
+    table_drop_accident_2563 = "DELETE FROM  accident_2563"
+    table_drop_accident_2564 = "DELETE FROM  accident_2564"
+    table_drop_accident_2565 = "DELETE FROM  accident_2565"
 
     drop_table_queries = [
-        table_drop_accident_2559
+        table_drop_accident_2559,
+        table_drop_accident_2560,
+        table_drop_accident_2561,
+        table_drop_accident_2562,
+        table_drop_accident_2563,
+        table_drop_accident_2564,
+        table_drop_accident_2565,
     ]
     
     for query in drop_table_queries:
@@ -121,16 +223,83 @@ def _get_files():
     conn = hook.get_conn()
     cur = conn.cursor()
 
-    copy_table_queries = [
-        """
-        COPY accidents FROM 's3://junnieebucket/accidentmonth.csv'
+    copy_table_accident_2559 = """
+        COPY accident_2559 FROM 's3://junnieebucket/accident_2559.csv'
         ACCESS_KEY_ID 'ASIA46YTXNWJMAF6LMDS'
         SECRET_ACCESS_KEY 'NMbmnE1DJXoCuwt32ftTwKfq1Mpbr05xYCN9wT0V'
         SESSION_TOKEN 'FwoGZXIvYXdzEBMaDM34gwp8FTEATq1UayLIAYA6l/WNhVUhAmJ9WAHaDaf0j+Pi2IpMkzP3XtHU8hI2Lq/GGQ7LhWE/PppP8rpjKk9j6Vdn6wR4s/QuBoBtMEQEEWIe7XtymDmHmlAIng3Covn2cp3AI9GU7yfdf04Y8/IbJDSQTlLlVZy97WfycrGwqssDppPPC7t8zuNLbQOYPrjAt+8zKcxXE07SwfrrWOw3hiWAKBLLn69C+T8UX5Dof7PhIUb0xilXo9x6/db1SwFDlQLUgBLiNIX2BannbaW76n5KBkTRKJDP+ZwGMi2n03LCPJLASRoc7oTOwRkPZHvLLWvcn2oOwXOAh3FiyyMaViM/wSzTVmU4CdI'
         CSV
         IGNOREHEADER 1
         REGION 'us-east-1'
-        """,
+        """
+
+    copy_table_accident_2560 = """
+        COPY accident_2560 FROM 's3://junnieebucket/accident_2560.csv'
+        ACCESS_KEY_ID 'ASIA46YTXNWJMAF6LMDS'
+        SECRET_ACCESS_KEY 'NMbmnE1DJXoCuwt32ftTwKfq1Mpbr05xYCN9wT0V'
+        SESSION_TOKEN 'FwoGZXIvYXdzEBMaDM34gwp8FTEATq1UayLIAYA6l/WNhVUhAmJ9WAHaDaf0j+Pi2IpMkzP3XtHU8hI2Lq/GGQ7LhWE/PppP8rpjKk9j6Vdn6wR4s/QuBoBtMEQEEWIe7XtymDmHmlAIng3Covn2cp3AI9GU7yfdf04Y8/IbJDSQTlLlVZy97WfycrGwqssDppPPC7t8zuNLbQOYPrjAt+8zKcxXE07SwfrrWOw3hiWAKBLLn69C+T8UX5Dof7PhIUb0xilXo9x6/db1SwFDlQLUgBLiNIX2BannbaW76n5KBkTRKJDP+ZwGMi2n03LCPJLASRoc7oTOwRkPZHvLLWvcn2oOwXOAh3FiyyMaViM/wSzTVmU4CdI'
+        CSV
+        IGNOREHEADER 1
+        REGION 'us-east-1'
+        """
+
+    copy_table_accident_2561 = """
+        COPY accident_2561 FROM 's3://junnieebucket/accident_2561.csv'
+        ACCESS_KEY_ID 'ASIA46YTXNWJMAF6LMDS'
+        SECRET_ACCESS_KEY 'NMbmnE1DJXoCuwt32ftTwKfq1Mpbr05xYCN9wT0V'
+        SESSION_TOKEN 'FwoGZXIvYXdzEBMaDM34gwp8FTEATq1UayLIAYA6l/WNhVUhAmJ9WAHaDaf0j+Pi2IpMkzP3XtHU8hI2Lq/GGQ7LhWE/PppP8rpjKk9j6Vdn6wR4s/QuBoBtMEQEEWIe7XtymDmHmlAIng3Covn2cp3AI9GU7yfdf04Y8/IbJDSQTlLlVZy97WfycrGwqssDppPPC7t8zuNLbQOYPrjAt+8zKcxXE07SwfrrWOw3hiWAKBLLn69C+T8UX5Dof7PhIUb0xilXo9x6/db1SwFDlQLUgBLiNIX2BannbaW76n5KBkTRKJDP+ZwGMi2n03LCPJLASRoc7oTOwRkPZHvLLWvcn2oOwXOAh3FiyyMaViM/wSzTVmU4CdI'
+        CSV
+        IGNOREHEADER 1
+        REGION 'us-east-1'
+        """
+
+    copy_table_accident_2562 = """
+        COPY accident_2562 FROM 's3://junnieebucket/accident_2562.csv'
+        ACCESS_KEY_ID 'ASIA46YTXNWJMAF6LMDS'
+        SECRET_ACCESS_KEY 'NMbmnE1DJXoCuwt32ftTwKfq1Mpbr05xYCN9wT0V'
+        SESSION_TOKEN 'FwoGZXIvYXdzEBMaDM34gwp8FTEATq1UayLIAYA6l/WNhVUhAmJ9WAHaDaf0j+Pi2IpMkzP3XtHU8hI2Lq/GGQ7LhWE/PppP8rpjKk9j6Vdn6wR4s/QuBoBtMEQEEWIe7XtymDmHmlAIng3Covn2cp3AI9GU7yfdf04Y8/IbJDSQTlLlVZy97WfycrGwqssDppPPC7t8zuNLbQOYPrjAt+8zKcxXE07SwfrrWOw3hiWAKBLLn69C+T8UX5Dof7PhIUb0xilXo9x6/db1SwFDlQLUgBLiNIX2BannbaW76n5KBkTRKJDP+ZwGMi2n03LCPJLASRoc7oTOwRkPZHvLLWvcn2oOwXOAh3FiyyMaViM/wSzTVmU4CdI'
+        CSV
+        IGNOREHEADER 1
+        REGION 'us-east-1'
+        """
+
+    copy_table_accident_2563 = """
+        COPY accident_2563 FROM 's3://junnieebucket/accident_2563.csv'
+        ACCESS_KEY_ID 'ASIA46YTXNWJMAF6LMDS'
+        SECRET_ACCESS_KEY 'NMbmnE1DJXoCuwt32ftTwKfq1Mpbr05xYCN9wT0V'
+        SESSION_TOKEN 'FwoGZXIvYXdzEBMaDM34gwp8FTEATq1UayLIAYA6l/WNhVUhAmJ9WAHaDaf0j+Pi2IpMkzP3XtHU8hI2Lq/GGQ7LhWE/PppP8rpjKk9j6Vdn6wR4s/QuBoBtMEQEEWIe7XtymDmHmlAIng3Covn2cp3AI9GU7yfdf04Y8/IbJDSQTlLlVZy97WfycrGwqssDppPPC7t8zuNLbQOYPrjAt+8zKcxXE07SwfrrWOw3hiWAKBLLn69C+T8UX5Dof7PhIUb0xilXo9x6/db1SwFDlQLUgBLiNIX2BannbaW76n5KBkTRKJDP+ZwGMi2n03LCPJLASRoc7oTOwRkPZHvLLWvcn2oOwXOAh3FiyyMaViM/wSzTVmU4CdI'
+        CSV
+        IGNOREHEADER 1
+        REGION 'us-east-1'
+        """
+
+    copy_table_accident_2564 = """
+        COPY accident_2564 FROM 's3://junnieebucket/accident_2564.csv'
+        ACCESS_KEY_ID 'ASIA46YTXNWJMAF6LMDS'
+        SECRET_ACCESS_KEY 'NMbmnE1DJXoCuwt32ftTwKfq1Mpbr05xYCN9wT0V'
+        SESSION_TOKEN 'FwoGZXIvYXdzEBMaDM34gwp8FTEATq1UayLIAYA6l/WNhVUhAmJ9WAHaDaf0j+Pi2IpMkzP3XtHU8hI2Lq/GGQ7LhWE/PppP8rpjKk9j6Vdn6wR4s/QuBoBtMEQEEWIe7XtymDmHmlAIng3Covn2cp3AI9GU7yfdf04Y8/IbJDSQTlLlVZy97WfycrGwqssDppPPC7t8zuNLbQOYPrjAt+8zKcxXE07SwfrrWOw3hiWAKBLLn69C+T8UX5Dof7PhIUb0xilXo9x6/db1SwFDlQLUgBLiNIX2BannbaW76n5KBkTRKJDP+ZwGMi2n03LCPJLASRoc7oTOwRkPZHvLLWvcn2oOwXOAh3FiyyMaViM/wSzTVmU4CdI'
+        CSV
+        IGNOREHEADER 1
+        REGION 'us-east-1'
+        """
+
+    copy_table_accident_2565 = """
+        COPY accident_2565 FROM 's3://junnieebucket/accident_2565.csv'
+        ACCESS_KEY_ID 'ASIA46YTXNWJMAF6LMDS'
+        SECRET_ACCESS_KEY 'NMbmnE1DJXoCuwt32ftTwKfq1Mpbr05xYCN9wT0V'
+        SESSION_TOKEN 'FwoGZXIvYXdzEBMaDM34gwp8FTEATq1UayLIAYA6l/WNhVUhAmJ9WAHaDaf0j+Pi2IpMkzP3XtHU8hI2Lq/GGQ7LhWE/PppP8rpjKk9j6Vdn6wR4s/QuBoBtMEQEEWIe7XtymDmHmlAIng3Covn2cp3AI9GU7yfdf04Y8/IbJDSQTlLlVZy97WfycrGwqssDppPPC7t8zuNLbQOYPrjAt+8zKcxXE07SwfrrWOw3hiWAKBLLn69C+T8UX5Dof7PhIUb0xilXo9x6/db1SwFDlQLUgBLiNIX2BannbaW76n5KBkTRKJDP+ZwGMi2n03LCPJLASRoc7oTOwRkPZHvLLWvcn2oOwXOAh3FiyyMaViM/wSzTVmU4CdI'
+        CSV
+        IGNOREHEADER 1
+        REGION 'us-east-1'
+        """
+
+    copy_table_queries = [
+        copy_table_accident_2559,
+        copy_table_accident_2560,
+        copy_table_accident_2561,
+        copy_table_accident_2562,
+        copy_table_accident_2563,
+        copy_table_accident_2565,
     ]
     
     for query in copy_table_queries:
@@ -145,10 +314,15 @@ def _redshift_to_dataframe():
     conn = hook.get_conn()
     cur = conn.cursor()
 
-    table_select_events_total = """ SELECT * FROM events_total """
-    cur.execute(table_select_events_total)
+    table_select_events_accidents_total = """ SELECT * FROM events_accidents_total """
+    cur.execute(table_select_events_accidents_total)
     df = pd.DataFrame(cur.fetchall())
-    df.to_csv (r'/opt/airflow/dags/data/download/events_total.csv', index = False) 
+    df.to_csv (r'/opt/airflow/dags/data/download/events_accidents_total.csv', index = False) 
+
+    table_select_events_accidents_count_total = """ SELECT * FROM events_accidents_count_total """
+    cur.execute(table_select_events_accidents_count_total)
+    df = pd.DataFrame(cur.fetchall())
+    df.to_csv (r'/opt/airflow/dags/data/download/events_accidents_count_total.csv', index = False) 
 
   
      
@@ -210,11 +384,6 @@ with DAG(
         python_callable=_upload_files,
     )
 
-    get_files = PythonOperator(
-        task_id="get_files",
-        python_callable=_get_files,
-    )
-    
     create_tables = PythonOperator(
         task_id="create_tables",
         python_callable=_create_tables,
@@ -225,6 +394,11 @@ with DAG(
         python_callable=_delete_tables,
     )
 
+    get_files = PythonOperator(
+        task_id="get_files",
+        python_callable=_get_files,
+    )
+    
     redshift_to_dataframe = PythonOperator(
         task_id="redshift_to_dataframe",
         python_callable=_redshift_to_dataframe,

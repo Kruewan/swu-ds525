@@ -1,5 +1,5 @@
 select 
- 	to_date(accident_date, 'YYYYMMDD', FALSE) AS accident_date  ,
+	to_date(accident_date, 'YYYYMMDD', FALSE) AS accident_date  ,
     accident_time ,
     expw_step ,
     weather_state ,
@@ -8,4 +8,4 @@ select
     dead_man ,
     dead_femel ,
     cause 
-from accidents
+from accident_2560
