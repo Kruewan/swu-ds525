@@ -374,8 +374,8 @@ def _insert_tables():
 with DAG(
     "etl",
     start_date=timezone.datetime(2022, 12, 10),
-    schedule="@daily",
-    tags=["workshop"],
+    schedule="@monthly",
+    tags=["capstone"],
     catchup=False,
 ) as dag:
 
