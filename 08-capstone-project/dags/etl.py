@@ -27,10 +27,93 @@ def _upload_files():
     )
 
     s3.meta.client.upload_file(
-        "/opt/airflow/dags/data/accidentmonth.csv", 
+        "/opt/airflow/dags/data/accident_2559.csv", 
         "junnieebucket", 
-        "accidentmonth.csv",
+        "accident_2559.csv",
     )
+
+    s3.meta.client.upload_file(
+        "/opt/airflow/dags/data/accident_2560.csv", 
+        "junnieebucket", 
+        "accident_2560.csv",
+    )
+
+    s3.meta.client.upload_file(
+        "/opt/airflow/dags/data/accident_2561.csv", 
+        "junnieebucket", 
+        "accident_2561.csv",
+    )
+
+    s3.meta.client.upload_file(
+        "/opt/airflow/dags/data/accident_2562.csv", 
+        "junnieebucket", 
+        "accident_2562.csv",
+    )
+
+    s3.meta.client.upload_file(
+        "/opt/airflow/dags/data/accident_2563.csv", 
+        "junnieebucket", 
+        "accident_2563.csv",
+    )
+
+    s3.meta.client.upload_file(
+        "/opt/airflow/dags/data/accident_2564.csv", 
+        "junnieebucket", 
+        "accident_2564.csv",
+    )
+
+    s3.meta.client.upload_file(
+        "/opt/airflow/dags/data/accident_2565.csv", 
+        "junnieebucket", 
+        "accident_2565.csv",
+    )
+
+
+
+def _create_tables():
+    hook = PostgresHook(postgres_conn_id="my_redshift")
+    conn = hook.get_conn()
+    cur = conn.cursor()
+
+    table_create_accident_2559 = """
+        CREATE TABLE IF NOT EXISTS accident_2559 (
+            accident_date VARCHAR(10),
+            accident_time VARCHAR(10),
+            expw_step VARCHAR(255),
+            weather_state VARCHAR(255),
+            injur_man int,
+            injur_femel int,
+            dead_man int,
+            dead_femel int,
+            cause VARCHAR(255)
+        )
+    """
+    
+    create_table_queries = [
+        table_create_accident_2559
+    ]
+    
+    for query in create_table_queries:
+        cur.execute(query)
+        conn.commit()
+
+
+
+def _delete_tables():
+    hook = PostgresHook(postgres_conn_id="my_redshift")
+    conn = hook.get_conn()
+    cur = conn.cursor()
+
+    table_drop_accident_2559 = "DELETE FROM  accident_2559"
+
+    drop_table_queries = [
+        table_drop_accident_2559
+    ]
+    
+    for query in drop_table_queries:
+        cur.execute(query)
+        conn.commit()
+
 
 
 def _get_files():
@@ -84,50 +167,6 @@ def _drop_tables():
         cur.execute(query)
         conn.commit()
 
-
-def _delete_tables():
-    hook = PostgresHook(postgres_conn_id="my_redshift")
-    conn = hook.get_conn()
-    cur = conn.cursor()
-
-    table_drop_accidents = "DELETE FROM  accidents"
-
-    drop_table_queries = [
-        table_drop_accidents
-    ]
-    
-    for query in drop_table_queries:
-        cur.execute(query)
-        conn.commit()
-
-
-
-def _create_tables():
-    hook = PostgresHook(postgres_conn_id="my_redshift")
-    conn = hook.get_conn()
-    cur = conn.cursor()
-
-    table_create_accidents = """
-        CREATE TABLE IF NOT EXISTS accidents (
-            accident_date VARCHAR(10),
-            accident_time VARCHAR(10),
-            expw_step VARCHAR(255),
-            weather_state VARCHAR(255),
-            injur_man int,
-            injur_femel int,
-            dead_man int,
-            dead_femel int,
-            cause VARCHAR(255)
-        )
-    """
-    
-    create_table_queries = [
-        table_create_accidents
-    ]
-    
-    for query in create_table_queries:
-        cur.execute(query)
-        conn.commit()
 
 
 def _insert_tables():
