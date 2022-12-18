@@ -15,10 +15,10 @@ from airflow.providers.postgres.hooks.postgres import PostgresHook
 
 def _upload_files():
 
-    aws_access_key_id = "ASIA46YTXNWJODSSVBFW"
-    aws_secret_access_key = "QI0nLiHgoKK3o+8IqE22M09GM7/QXFapW1DO52+c"
-    aws_session_token = "FwoGZXIvYXdzEAcaDGKC4U+YxGS3t2RU6yLIAfqGqr1O6In+3yzRTDkGBiiLaX6cW+KLYLjbBosLh+Et8hSW6aVLDaEGkQtsrETgjtP3TIzUdEz+gWlcvX2hXsm7BtSmf00nmp6sFCysvi1BhHqvdx4mBGggG3bxOdMU/oIYfLFK5si75HFupoKRANLwox+Gvk5ZlGAPvRWNvkYVri4ZO1T+INqPwmdzWiv3rR1ygFJJ4GDagYzOcZuDsRomAMjrPGs3yTUbxz1NXGkg7chlefhz3mmo9d9SxsjW+tzftn8J7JKSKMKC95wGMi0c9kM1TUsy7ZzYC++zg9dPinfwQLeILcWwlLxeEEJLCUu0c5CbTqoqSZoNpQY"
-        
+    aws_access_key_id = "ASIA46YTXNWJMAF6LMDS"
+    aws_secret_access_key = "NMbmnE1DJXoCuwt32ftTwKfq1Mpbr05xYCN9wT0V"
+    aws_session_token = "FwoGZXIvYXdzEBMaDM34gwp8FTEATq1UayLIAYA6l/WNhVUhAmJ9WAHaDaf0j+Pi2IpMkzP3XtHU8hI2Lq/GGQ7LhWE/PppP8rpjKk9j6Vdn6wR4s/QuBoBtMEQEEWIe7XtymDmHmlAIng3Covn2cp3AI9GU7yfdf04Y8/IbJDSQTlLlVZy97WfycrGwqssDppPPC7t8zuNLbQOYPrjAt+8zKcxXE07SwfrrWOw3hiWAKBLLn69C+T8UX5Dof7PhIUb0xilXo9x6/db1SwFDlQLUgBLiNIX2BannbaW76n5KBkTRKJDP+ZwGMi2n03LCPJLASRoc7oTOwRkPZHvLLWvcn2oOwXOAh3FiyyMaViM/wSzTVmU4CdI"
+            
     s3 = boto3.resource(
         "s3",
         aws_access_key_id=aws_access_key_id,
@@ -41,9 +41,9 @@ def _get_files():
     copy_table_queries = [
         """
         COPY accidents FROM 's3://junnieebucket/accidentmonth.csv'
-        ACCESS_KEY_ID 'ASIA46YTXNWJODSSVBFW'
-        SECRET_ACCESS_KEY 'QI0nLiHgoKK3o+8IqE22M09GM7/QXFapW1DO52+c'
-        SESSION_TOKEN 'FwoGZXIvYXdzEAcaDGKC4U+YxGS3t2RU6yLIAfqGqr1O6In+3yzRTDkGBiiLaX6cW+KLYLjbBosLh+Et8hSW6aVLDaEGkQtsrETgjtP3TIzUdEz+gWlcvX2hXsm7BtSmf00nmp6sFCysvi1BhHqvdx4mBGggG3bxOdMU/oIYfLFK5si75HFupoKRANLwox+Gvk5ZlGAPvRWNvkYVri4ZO1T+INqPwmdzWiv3rR1ygFJJ4GDagYzOcZuDsRomAMjrPGs3yTUbxz1NXGkg7chlefhz3mmo9d9SxsjW+tzftn8J7JKSKMKC95wGMi0c9kM1TUsy7ZzYC++zg9dPinfwQLeILcWwlLxeEEJLCUu0c5CbTqoqSZoNpQY'
+        ACCESS_KEY_ID 'ASIA46YTXNWJMAF6LMDS'
+        SECRET_ACCESS_KEY 'NMbmnE1DJXoCuwt32ftTwKfq1Mpbr05xYCN9wT0V'
+        SESSION_TOKEN 'FwoGZXIvYXdzEBMaDM34gwp8FTEATq1UayLIAYA6l/WNhVUhAmJ9WAHaDaf0j+Pi2IpMkzP3XtHU8hI2Lq/GGQ7LhWE/PppP8rpjKk9j6Vdn6wR4s/QuBoBtMEQEEWIe7XtymDmHmlAIng3Covn2cp3AI9GU7yfdf04Y8/IbJDSQTlLlVZy97WfycrGwqssDppPPC7t8zuNLbQOYPrjAt+8zKcxXE07SwfrrWOw3hiWAKBLLn69C+T8UX5Dof7PhIUb0xilXo9x6/db1SwFDlQLUgBLiNIX2BannbaW76n5KBkTRKJDP+ZwGMi2n03LCPJLASRoc7oTOwRkPZHvLLWvcn2oOwXOAh3FiyyMaViM/wSzTVmU4CdI'
         CSV
         IGNOREHEADER 1
         REGION 'us-east-1'
